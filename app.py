@@ -17,14 +17,29 @@ command = [
     "--cookie", f'session="{session_id}"',
     "-d", "productId=1&storeId=1",
     "--batch",
-    "--os-cmd", '"whoami"'
+    "--os-cmd", "whoami"
 ]
 
-# Start the process with pexpect
-child = pexpect.spawn(" ".join(command))
+print("Executing command: ", " ".join(command))
 
-# Wait for the command to complete
-child.expect(pexpect.EOF)
+# Start the process with pexpect
+child = pexpect.spawn(" ".join(command), timeout=120)  # Increased timeout
+
+# Attach a logfile to capture all output for debugging
+child.logfile = open("pexpect_log.txt", "wb")
+
+# Loop to handle intermediate prompts
+while True:
+    try:
+        index = child.expect([pexpect.EOF, pexpect.TIMEOUT])
+        if index == 0:  # EOF reached, command completed
+            break
+        elif index == 1:  # Timeout
+            print("Timeout waiting for command to complete.")
+            break
+    except pexpect.exceptions.TIMEOUT:
+        print("Command took too long, exiting.")
+        break
 
 # Capture the output
 output = child.before.decode()

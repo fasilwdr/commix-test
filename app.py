@@ -17,7 +17,7 @@ command = [
     "--cookie", f'session="{session_id}"',
     "-d", "productId=1&storeId=1",
     "--batch",
-    "--os-cmd", "whoami"
+    "--os-cmd", '"whoami"'
 ]
 
 print("Executing command: ", " ".join(command))

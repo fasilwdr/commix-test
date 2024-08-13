@@ -1,7 +1,7 @@
 import requests
 import pexpect
 
-url = "https://0a3d005504ae17ba8308700f007a0057.web-security-academy.net/"
+url = "https://0a87006a04e104718272f24200820093.web-security-academy.net/"
 
 session = requests.Session()
 response = session.get(url)

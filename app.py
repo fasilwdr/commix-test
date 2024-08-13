@@ -43,5 +43,5 @@ output = child.before.decode().splitlines()
 with open("output.txt", "w", encoding='utf-8') as output_file:
     output_file.write(f"Affected URL : {full_url}\n")
     for line in output:
-        if "injectable" in line.lower() or "injection" in line.lower():
+        if "injectable" in line.lower():
             output_file.write(line + "\n")

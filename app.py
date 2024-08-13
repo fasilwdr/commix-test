@@ -18,10 +18,12 @@ print("Executing command: ", command)
 with open("output.txt", "w", encoding='utf-8') as output_file:
     output_file.write(f"Affected URL : {full_url}\n")
 
-result = subprocess.run(command, shell=True, capture_output=True, text=True)
-
-for line in result.stdout.splitlines():
-    print(line)
-    if "injectable" in line.lower() or "injection" in line.lower():
-        with open("output.txt", "a", encoding='utf-8') as output_file:
-            output_file.write(line + "\n")
+try:
+    result = subprocess.run(command, shell=True, capture_output=True, text=True, timeout=60)  # 60 seconds timeout
+    for line in result.stdout.splitlines():
+        print(line)
+        if "injectable" in line.lower() or "injection" in line.lower():
+            with open("output.txt", "a", encoding='utf-8') as output_file:
+                output_file.write(line + "\n")
+except subprocess.TimeoutExpired:
+    print("Command timed out and was terminated.")
